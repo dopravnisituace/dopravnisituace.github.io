@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Zobrazování externího obsahu</title>
+</head>
+<body>
+  <div id="externiObsah"></div>
+
+  <script>
+    fetch('http://testweb.xf.cz:8080/')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('externiObsah').innerHTML = data;
+      })
+      .catch(error => {
+        console.error('Chyba při načítání externího obsahu:', error);
+      });
+  </script>
+</body>
+</html>
