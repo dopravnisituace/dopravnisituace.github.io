@@ -8,7 +8,7 @@
   <div id="externiObsah"></div>
 
   <script>
-    fetch('https://seznam.cz')
+    fetch('https://seznam.cz/')
       .then(response => response.text())
       .then(data => {
         document.getElementById('externiObsah').innerHTML = data;
