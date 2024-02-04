@@ -3,91 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Záznam dopravní situace</title>
+    <title>Dopravní Záznamy</title>
 </head>
 <body>
-
-    <h1>Záznam dopravní situace</h1>
-
+    <h1>Dopravní Záznamy</h1>
+    
     <form id="trafficForm">
-        <label for="location">Místo:</label>
-        <input type="text" id="location" name="location" required><br>
-
-        <label for="description">Popis situace:</label>
-        <textarea id="description" name="description" required></textarea><br>
-
-        <button type="button" onclick="recordTraffic()">Zaznamenat situaci</button>
+        <label for="trafficData">Záznam dopravní situace:</label>
+        <input type="text" id="trafficData" required>
+        <button type="button" onclick="submitTraffic()">Odeslat</button>
     </form>
 
-    <h2>Aktuální dopravní situace</h2>
-    <ul id="trafficList">
-        <!-- Zde se budou zobrazovat záznamy o dopravních situacích -->
-    </ul>
-
-    <script>
-        // Funkce pro načtení dopravních situací ze souboru na GitHub Gist
-        function loadTraffic() {
-            var gistID = 'ff16dc32f639f3dc3c20d26f66c412ea'; // Nahraďte ID svým Gist ID
-            var gistURL = 'https://api.github.com/gists/' + gistID;
-
-            fetch(gistURL)
-                .then(response => response.json())
-                .then(data => {
-                    var trafficList = document.getElementById("trafficList");
-                    trafficList.innerHTML = data.files['traffic.txt'].content;
-                })
-                .catch(error => console.error('Error:', error));
-        }
-
-// Funkce pro zaznamenání dopravní situace
-function recordTraffic() {
-    var location = document.getElementById("location").value;
-    var description = document.getElementById("description").value;
-
-    if (location && description) {
-        var listItem = document.createElement("li");
-        listItem.innerHTML = "<strong>" + location + ":</strong> " + description;
-
-        var trafficList = document.getElementById("trafficList");
-        trafficList.appendChild(listItem);
-
-        // Uložení aktuálních dopravních situací do souboru na GitHub Gist
-        var gistID = 'ff16dc32f639f3dc3c20d26f66c412ea'; // Nahraďte ID svým Gist ID
-        var gistURL = 'https://api.github.com/gists/' + gistID;
-
-        var personalAccessToken = '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'; // Nahraďte svým osobním přístupovým tokenem
-
-        fetch(gistURL, {
-            method: 'PATCH',
-            headers: {
-                'Authorization': 'token ' + personalAccessToken,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                files: {
-                    'traffic.txt': {
-                        content: trafficList.innerHTML
-                    }
-                }
-            }),
-        })
-        .then(response => response.json())
-        .then(data => console.log('Success:', data))
-        .catch(error => console.error('Error:', error));
-
-        // Vyčištění polí formuláře
-        document.getElementById("location").value = "";
-        document.getElementById("description").value = "";
-    } else {
-        alert("Prosím, vyplňte všechna pole.");
-    }
-}
-
-        // Při načtení stránky zavolat funkci pro načtení dopravních situací
-        document.addEventListener("DOMContentLoaded", function() {
-            loadTraffic();
-        });
-    </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
