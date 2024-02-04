@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dopravní Informace</title>
     <style>
-        /* Styly můžete přidat podle potřeby */
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
@@ -14,7 +13,6 @@
             max-width: 600px;
             margin: auto;
         }
-        /* Další styly ... */
     </style>
 </head>
 <body>
@@ -26,7 +24,6 @@
     <section>
         <h2>Záznam Dopravní Situace</h2>
         <form>
-            <!-- Přidány nové pole pro datum a čas -->
             <label for="location">Lokace:</label>
             <input type="text" id="location" name="location" required>
 
@@ -59,11 +56,9 @@
     </footer>
 
     <script type="module">
-        // Import Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCMXz0EgG-_pHTwnNdNyl2cq2aLStrLSYM",
             authDomain: "dopravnisituace-1e008.firebaseapp.com",
@@ -75,11 +70,9 @@
             measurementId: "G-TE265RZDY3"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        // Funkce pro odeslání formuláře
         function submitForm() {
             const location = document.getElementById('location').value;
             const description = document.getElementById('description').value;
@@ -87,7 +80,6 @@
             const date = document.getElementById('date').value;
             const time = document.getElementById('time').value;
 
-            // Odeslání záznamu do Firebase Realtime Database
             const recordsRef = ref(database, 'records');
             push(recordsRef, {
                 location,
@@ -97,11 +89,9 @@
                 time,
             });
 
-            // Aktualizace zobrazení záznamů
             getRecords();
         }
 
-        // Funkce pro získání a zobrazení záznamů
         function getRecords() {
             const recordsRef = ref(database, 'records');
             onValue(recordsRef, (snapshot) => {
@@ -121,10 +111,8 @@
             });
         }
 
-        // Připojení posluchače události na tlačítko
         document.getElementById('submitButton').addEventListener('click', submitForm);
 
-        // Volání funkce při načtení stránky
         document.addEventListener("DOMContentLoaded", function() {
             getRecords();
         });
