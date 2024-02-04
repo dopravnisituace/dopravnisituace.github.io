@@ -36,11 +36,12 @@
                 <option value="no">Ne</option>
             </select>
 
-            <label for="date">Datum:</label>
+            <!-- Datum a čas nebudou vyžadovány od uživatele -->
+            <!-- <label for="date">Datum:</label>
             <input type="date" id="date" name="date" required>
 
             <label for="time">Čas:</label>
-            <input type="time" id="time" name="time" required>
+            <input type="time" id="time" name="time" required> -->
 
             <button type="button" id="submitButton">Odeslat</button>
         </form>
@@ -77,8 +78,11 @@
             const location = document.getElementById('location').value;
             const description = document.getElementById('description').value;
             const policePresence = document.getElementById('police_presence').value;
-            const date = document.getElementById('date').value;
-            const time = document.getElementById('time').value;
+
+            // Získání aktuálního data a času
+            const currentDate = new Date();
+            const date = currentDate.toLocaleDateString('cs-CZ');
+            const time = currentDate.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' });
 
             const recordsRef = ref(database, 'records');
             push(recordsRef, {
