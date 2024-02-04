@@ -23,9 +23,27 @@ function submitTraffic() {
     .then(data => {
         console.log('Data byla úspěšně odeslána:', data);
         alert('Dopravní záznam byl úspěšně uložen.');
+        displayTrafficRecords();
     })
     .catch(error => {
         console.error('Chyba při odesílání dat:', error);
         alert('Došlo k chybě při ukládání dopravního záznamu.');
+    });
+}
+
+function displayTrafficRecords() {
+    // Získání obsahu souboru 'traffic.txt' z Gistu
+    const gistId = 'ff16dc32f639f3dc3c20d26f66c412ea';
+    const rawUrl = `https://gist.githubusercontent.com/raw/${gistId}/traffic.txt`;
+
+    fetch(rawUrl)
+    .then(response => response.text())
+    .then(trafficData => {
+        // Zobrazení dopravních záznamů pod formulářem
+        const recordsContainer = document.getElementById('trafficRecords');
+        recordsContainer.innerHTML = `<h2>Dopravní Záznamy</h2><p>${trafficData}</p>`;
+    })
+    .catch(error => {
+        console.error('Chyba při získávání dopravních záznamů:', error);
     });
 }
