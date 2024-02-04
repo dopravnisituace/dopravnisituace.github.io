@@ -1,21 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Zobrazování externího obsahu</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Záznam dopravní situace</title>
 </head>
 <body>
-  <div id="externiObsah"></div>
 
-  <script>
-    fetch('https://seznam.cz/')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('externiObsah').innerHTML = data;
-      })
-      .catch(error => {
-        console.error('Chyba při načítání externího obsahu:', error);
-      });
-  </script>
+    <h1>Záznam dopravní situace</h1>
+
+    <form id="trafficForm">
+        <label for="location">Místo:</label>
+        <input type="text" id="location" name="location" required><br>
+
+        <label for="description">Popis situace:</label>
+        <textarea id="description" name="description" required></textarea><br>
+
+        <button type="button" onclick="recordTraffic()">Zaznamenat situaci</button>
+    </form>
+
+    <h2>Aktuální dopravní situace</h2>
+    <ul id="trafficList">
+        <!-- Zde se budou zobrazovat záznamy o dopravních situacích -->
+    </ul>
+
+    <script>
+        function recordTraffic() {
+            var location = document.getElementById("location").value;
+            var description = document.getElementById("description").value;
+
+            if (location && description) {
+                var listItem = document.createElement("li");
+                listItem.innerHTML = "<strong>" + location + ":</strong> " + description;
+
+                document.getElementById("trafficList").appendChild(listItem);
+
+                // Volitelně: můžete data poslat na server, pokud byste je chtěli někde uchovávat dlouhodobě
+                // Zde by bylo vhodné využít například AJAX nebo Fetch API pro asynchronní komunikaci se serverem.
+                // fetch('url_na_server', {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //     },
+                //     body: JSON.stringify({ location: location, description: description }),
+                // })
+                // .then(response => response.json())
+                // .then(data => {
+                //     console.log('Success:', data);
+                // })
+                // .catch((error) => {
+                //     console.error('Error:', error);
+                // });
+            } else {
+                alert("Prosím, vyplňte všechna pole.");
+            }
+        }
+    </script>
+
 </body>
 </html>
