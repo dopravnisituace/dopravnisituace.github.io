@@ -25,6 +25,21 @@
     </ul>
 
     <script>
+        // Funkce pro načtení dopravních situací ze souboru na GitHub Gist
+        function loadTraffic() {
+            var gistID = 'dopravnisituace'; // Nahraďte ID svým Gist ID
+            var gistURL = 'https://api.github.com/gists/' + gistID;
+
+            fetch(gistURL)
+                .then(response => response.json())
+                .then(data => {
+                    var trafficList = document.getElementById("trafficList");
+                    trafficList.innerHTML = data.files['traffic.txt'].content;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Funkce pro zaznamenání dopravní situace
         function recordTraffic() {
             var location = document.getElementById("location").value;
             var description = document.getElementById("description").value;
@@ -33,28 +48,42 @@
                 var listItem = document.createElement("li");
                 listItem.innerHTML = "<strong>" + location + ":</strong> " + description;
 
-                document.getElementById("trafficList").appendChild(listItem);
+                var trafficList = document.getElementById("trafficList");
+                trafficList.appendChild(listItem);
 
-                // Volitelně: můžete data poslat na server, pokud byste je chtěli někde uchovávat dlouhodobě
-                // Zde by bylo vhodné využít například AJAX nebo Fetch API pro asynchronní komunikaci se serverem.
-                // fetch('url_na_server', {
-                //     method: 'POST',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //     },
-                //     body: JSON.stringify({ location: location, description: description }),
-                // })
-                // .then(response => response.json())
-                // .then(data => {
-                //     console.log('Success:', data);
-                // })
-                // .catch((error) => {
-                //     console.error('Error:', error);
-                // });
+                // Uložení aktuálních dopravních situací do souboru na GitHub Gist
+                var gistID = 'dopravnisituace'; // Nahraďte ID svým Gist ID
+                var gistURL = 'https://api.github.com/gists/' + gistID;
+
+                fetch(gistURL, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        files: {
+                            'traffic.txt': {
+                                content: trafficList.innerHTML
+                            }
+                        }
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => console.log('Success:', data))
+                .catch(error => console.error('Error:', error));
+
+                // Vyčištění polí formuláře
+                document.getElementById("location").value = "";
+                document.getElementById("description").value = "";
             } else {
                 alert("Prosím, vyplňte všechna pole.");
             }
         }
+
+        // Při načtení stránky zavolat funkci pro načtení dopravních situací
+        document.addEventListener("DOMContentLoaded", function() {
+            loadTraffic();
+        });
     </script>
 
 </body>
