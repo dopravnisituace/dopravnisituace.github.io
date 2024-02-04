@@ -1,1 +1,137 @@
-ahooj
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dopravní Informace</title>
+    <style>
+        /* Styly můžete přidat podle potřeby */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            max-width: 600px;
+            margin: auto;
+        }
+        /* Další styly ... */
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Dopravní Informace a Hlídky</h1>
+    </header>
+
+    <section>
+        <h2>Záznam Dopravní Situace</h2>
+        <form>
+            <!-- Přidány nové pole pro datum a čas -->
+            <label for="location">Lokace:</label>
+            <input type="text" id="location" name="location" required>
+
+            <label for="description">Popis situace:</label>
+            <textarea id="description" name="description" required></textarea>
+
+            <label for="police_presence">Policie přítomna:</label>
+            <select id="police_presence" name="police_presence">
+                <option value="yes">Ano</option>
+                <option value="no">Ne</option>
+            </select>
+
+            <label for="date">Datum:</label>
+            <input type="date" id="date" name="date" required>
+
+            <label for="time">Čas:</label>
+            <input type="time" id="time" name="time" required>
+
+            <button type="button" onclick="submitForm()">Odeslat</button>
+        </form>
+    </section>
+
+    <section>
+        <h2>Seznam Záznamů</h2>
+        <ul id="recordList"></ul>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Dopravní Informace</p>
+    </footer>
+
+    <script>
+        // Funkce pro odeslání formuláře
+        function submitForm() {
+            const location = document.getElementById('location').value;
+            const description = document.getElementById('description').value;
+            const policePresence = document.getElementById('police_presence').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+
+            // Odeslání záznamu do Firebase Realtime Database
+            const recordsRef = firebase.database().ref('records');
+            recordsRef.push({
+                location,
+                description,
+                policePresence,
+                date,
+                time,
+            });
+
+            // Aktualizace zobrazení záznamů
+            getRecords();
+        }
+
+        // Funkce pro získání a zobrazení záznamů
+        function getRecords() {
+            const recordsRef = firebase.database().ref('records');
+            recordsRef.once('value').then(snapshot => {
+                const records = [];
+                snapshot.forEach(childSnapshot => {
+                    records.push(childSnapshot.val());
+                });
+
+                const recordList = document.getElementById('recordList');
+                recordList.innerHTML = '';
+
+                records.forEach(record => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${record.date} ${record.time} - ${record.location}, ${record.description} (Policie přítomna: ${record.policePresence})`;
+                    recordList.appendChild(listItem);
+                });
+            });
+        }
+
+        // Volání funkce při načtení stránky
+        getRecords();
+    </script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-database.js"></script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyCMXz0EgG-_pHTwnNdNyl2cq2aLStrLSYM",
+    authDomain: "dopravnisituace-1e008.firebaseapp.com",
+    projectId: "dopravnisituace-1e008",
+    storageBucket: "dopravnisituace-1e008.appspot.com",
+    messagingSenderId: "964028265248",
+    appId: "1:964028265248:web:f1f5daf1ea21065c6bdd45",
+    measurementId: "G-TE265RZDY3"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+</body>
+</html>
