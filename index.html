@@ -109,29 +109,22 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js"></script>
 
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+    <script>
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyCMXz0EgG-_pHTwnNdNyl2cq2aLStrLSYM",
+            authDomain: "dopravnisituace-1e008.firebaseapp.com",
+            projectId: "dopravnisituace-1e008",
+            storageBucket: "dopravnisituace-1e008.appspot.com",
+            messagingSenderId: "964028265248",
+            appId: "1:964028265248:web:f1f5daf1ea21065c6bdd45",
+            measurementId: "G-TE265RZDY3"
+        };
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyCMXz0EgG-_pHTwnNdNyl2cq2aLStrLSYM",
-    authDomain: "dopravnisituace-1e008.firebaseapp.com",
-    projectId: "dopravnisituace-1e008",
-    storageBucket: "dopravnisituace-1e008.appspot.com",
-    messagingSenderId: "964028265248",
-    appId: "1:964028265248:web:f1f5daf1ea21065c6bdd45",
-    measurementId: "G-TE265RZDY3"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+    </script>
 
 </body>
 </html>
