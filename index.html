@@ -122,7 +122,9 @@
         }
 
         // Volání funkce při načtení stránky
-        getRecords();
+        document.addEventListener("DOMContentLoaded", function() {
+            getRecords();
+        });
     </script>
 </body>
 </html>
