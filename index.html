@@ -121,7 +121,7 @@
     function submitForm() {
         const location = document.getElementById('location').value;
         const description = document.getElementById('description').value;
-        const policePresence = document.getElementById('police_presence').value;
+        const policePresence = document.getElementById('police_presence').value === 'yes' ? 'Ano' : 'Ne';
         const name = document.getElementById('name').value;
         const eventType = document.getElementById('event_type').value;
 
