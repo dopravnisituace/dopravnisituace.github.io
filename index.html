@@ -13,113 +13,167 @@
             max-width: 600px;
             margin: auto;
         }
+        section {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Dopravní Informace a Hlídky</h1>
-    </header>
+<header>
+    <h1>Dopravní Informace a Hlídky</h1>
+</header>
 
-    <section>
-        <h2>Záznam Dopravní Situace</h2>
-        <form>
-            <label for="location">Lokace:</label>
-            <input type="text" id="location" name="location" required>
+<section>
+    <h2>Záznam Dopravní Situace</h2>
+    <form>
+        <label for="location">Lokace:</label>
+        <input type="text" id="location" name="location" required><br><br>
 
-            <label for="description">Popis situace:</label>
-            <textarea id="description" name="description" required></textarea>
+        <label for="description">Popis situace:</label><br>
+        <textarea id="description" name="description" required></textarea><br><br>
 
-            <label for="police_presence">Policie přítomna:</label>
-            <select id="police_presence" name="police_presence">
-                <option value="yes">Ano</option>
-                <option value="no">Ne</option>
-            </select>
+        <label for="police_presence">Policie přítomna:</label>
+        <select id="police_presence" name="police_presence">
+            <option value="yes">Ano</option>
+            <option value="no">Ne</option>
+        </select><br><br>
 
-            <!-- Datum a čas nebudou vyžadovány od uživatele -->
-            <!-- <label for="date">Datum:</label>
-            <input type="date" id="date" name="date" required>
+        <label for="name">Jméno:</label>
+        <input type="text" id="name" name="name" required><br><br>
 
-            <label for="time">Čas:</label>
-            <input type="time" id="time" name="time" required> -->
+        <label for="event_type">Typ události:</label>
+        <select id="event_type" name="event_type">
+            <option value="accident">Dopravní nehoda</option>
+            <option value="road_closure">Uzavření silnice</option>
+            <option value="traffic_jam">Dopravní zácpa</option>
+            <option value="injury">Dopravní nehoda se zraněním</option>
+            <option value="police_patrol">Policejní hlídka</option>
+            <option value="police_checkpoint">Policejní kontrola</option>
+        </select><br><br>
 
-            <button type="button" id="submitButton">Odeslat</button>
-        </form>
-    </section>
+        <button type="button" id="submitButton">Odeslat</button>
+    </form>
+</section>
 
-    <section>
-        <h2>Seznam Záznamů</h2>
-        <ul id="recordList"></ul>
-    </section>
+<section>
+    <h2>Seznam Záznamů</h2>
+    <table id="recordList">
+        <thead>
+            <tr>
+                <th>Datum a čas</th>
+                <th>Lokace</th>
+                <th>Popis situace</th>
+                <th>Policie přítomna</th>
+                <th>Jméno</th>
+                <th>Typ události</th>
+            </tr>
+        </thead>
+        <tbody id="recordListBody"></tbody>
+    </table>
+</section>
 
-    <footer>
-        <p>&copy; 2024 Dopravní Informace</p>
-    </footer>
+<footer>
+    <p>&copy; 2024 Dopravní Informace</p>
+</footer>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCMXz0EgG-_pHTwnNdNyl2cq2aLStrLSYM",
-            authDomain: "dopravnisituace-1e008.firebaseapp.com",
-            projectId: "dopravnisituace-1e008",
-            databaseURL: "https://dopravnisituace-1e008-default-rtdb.europe-west1.firebasedatabase.app",
-            storageBucket: "dopravnisituace-1e008.appspot.com",
-            messagingSenderId: "964028265248",
-            appId: "1:964028265248:web:f1f5daf1ea21065c6bdd45",
-            measurementId: "G-TE265RZDY3"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyCMXz0EgG-_pHTwnNdNyl2cq2aLStrLSYM",
+        authDomain: "dopravnisituace-1e008.firebaseapp.com",
+        projectId: "dopravnisituace-1e008",
+        databaseURL: "https://dopravnisituace-1e008-default-rtdb.europe-west1.firebasedatabase.app",
+        storageBucket: "dopravnisituace-1e008.appspot.com",
+        messagingSenderId: "964028265248",
+        appId: "1:964028265248:web:f1f5daf1ea21065c6bdd45",
+        measurementId: "G-TE265RZDY3"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
 
-        function submitForm() {
-            const location = document.getElementById('location').value;
-            const description = document.getElementById('description').value;
-            const policePresence = document.getElementById('police_presence').value;
+    function submitForm() {
+        const location = document.getElementById('location').value;
+        const description = document.getElementById('description').value;
+        const policePresence = document.getElementById('police_presence').value;
+        const name = document.getElementById('name').value;
+        const eventType = document.getElementById('event_type').value;
 
-            // Získání aktuálního data a času
-            const currentDate = new Date();
-            const date = currentDate.toLocaleDateString('cs-CZ');
-            const time = currentDate.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' });
+        const currentDate = new Date();
+        const date = currentDate.toLocaleDateString('cs-CZ');
+        const time = currentDate.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' });
 
-            const recordsRef = ref(database, 'records');
-            push(recordsRef, {
-                location,
-                description,
-                policePresence,
-                date,
-                time,
-            });
-
-            getRecords();
-        }
-
-        function getRecords() {
-            const recordsRef = ref(database, 'records');
-            onValue(recordsRef, (snapshot) => {
-                const records = [];
-                snapshot.forEach((childSnapshot) => {
-                    records.push(childSnapshot.val());
-                });
-
-                const recordList = document.getElementById('recordList');
-                recordList.innerHTML = '';
-
-                records.forEach((record) => {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = `${record.date} ${record.time} - ${record.location}, ${record.description} (Policie přítomna: ${record.policePresence})`;
-                    recordList.appendChild(listItem);
-                });
-            });
-        }
-
-        document.getElementById('submitButton').addEventListener('click', submitForm);
-
-        document.addEventListener("DOMContentLoaded", function() {
-            getRecords();
+        const recordsRef = ref(database, 'records');
+        push(recordsRef, {
+            location,
+            description,
+            policePresence,
+            name,
+            eventType,
+            date,
+            time,
         });
-    </script>
+
+        getRecords();
+    }
+
+    function getRecords() {
+        const recordsRef = ref(database, 'records');
+        onValue(recordsRef, (snapshot) => {
+            const records = [];
+            snapshot.forEach((childSnapshot) => {
+                records.push(childSnapshot.val());
+            });
+
+            const recordListBody = document.getElementById('recordListBody');
+            recordListBody.innerHTML = '';
+
+            records.forEach((record) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.date} ${record.time}</td>
+                    <td>${record.location}</td>
+                    <td>${record.description}</td>
+                    <td>${record.policePresence}</td>
+                    <td>${record.name}</td>
+                    <td>${record.eventType}</td>
+                `;
+                recordListBody.appendChild(row);
+            });
+        });
+    }
+
+    document.getElementById('submitButton').addEventListener('click', submitForm);
+
+    document.addEventListener("DOMContentLoaded", function() {
+        getRecords();
+    });
+</script>
 </body>
 </html>
