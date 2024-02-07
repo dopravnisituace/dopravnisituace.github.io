@@ -123,7 +123,8 @@
         const description = document.getElementById('description').value;
         const policePresence = document.getElementById('police_presence').value === 'yes' ? 'Ano' : 'Ne';
         const name = document.getElementById('name').value;
-        const eventType = document.getElementById('event_type').value;
+        const eventTypeElement = document.getElementById('event_type');
+        const eventType = eventTypeElement.options[eventTypeElement.selectedIndex].text;
 
         const currentDate = new Date();
         const date = currentDate.toLocaleDateString('cs-CZ');
