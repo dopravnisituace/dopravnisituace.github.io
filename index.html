@@ -32,7 +32,7 @@
 
 <section class="container mt-4">
     <h2>Záznam Dopravní Situace</h2>
-    <form>
+    <form id="trafficForm">
         <div class="form-group">
             <label for="location">Lokace:</label>
             <input type="text" class="form-control" id="location" name="location" required>
@@ -45,7 +45,7 @@
 
         <div class="form-group">
             <label for="police_presence">Policie přítomna:</label>
-            <select class="form-control" id="police_presence" name="police_presence">
+            <select class="form-control" id="police_presence" name="police_presence" required>
                 <option value="yes">Ano</option>
                 <option value="no">Ne</option>
             </select>
@@ -58,7 +58,7 @@
 
         <div class="form-group">
             <label for="event_type">Typ události:</label>
-            <select class="form-control" id="event_type" name="event_type">
+            <select class="form-control" id="event_type" name="event_type" required>
                 <option value="accident">Dopravní nehoda</option>
                 <option value="road_closure">Uzavření silnice</option>
                 <option value="traffic_jam">Dopravní zácpa</option>
@@ -68,7 +68,7 @@
             </select>
         </div>
 
-        <button type="button" class="btn btn-primary" id="submitButton">Odeslat</button>
+        <button type="submit" class="btn btn-primary">Odeslat</button>
     </form>
 </section>
 
@@ -113,7 +113,11 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
-    function submitForm() {
+    const trafficForm = document.getElementById('trafficForm');
+
+    function submitForm(event) {
+        event.preventDefault();
+
         const location = document.getElementById('location').value;
         const description = document.getElementById('description').value;
         const policePresence = document.getElementById('police_presence').value === 'yes' ? 'Ano' : 'Ne';
@@ -165,7 +169,7 @@
         });
     }
 
-    document.getElementById('submitButton').addEventListener('click', submitForm);
+    trafficForm.addEventListener('submit', submitForm);
 
     document.addEventListener("DOMContentLoaded", function() {
         getRecords();
